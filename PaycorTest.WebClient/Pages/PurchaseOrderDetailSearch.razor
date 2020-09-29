@@ -1,0 +1,156 @@
+@page "/purchaseOrderDetailAggregatedSearch"
+@using System.Net.Http
+@using PaycorTest.Common.Extensions
+@using PaycorTest.API.Models.Request
+@using PaycorTest.API.Models.AggregationModels
+@using PaycorTest.WebClient.Models
+
+@inject HttpClient Http
+
+<div class="mx-auto">
+    <p>Search Product by:</p>
+
+    @if (ResultModel == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>LineTotal Sum</th>
+                    <th>OrderQty Sum</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in ResultModel.Result)
+                {
+                    <tr>
+                        <td>@result.Date.ToString("dd-MM-yyyy")</td>
+                        <td>@result.LineTotalSum</td>
+                        <td>@result.OrderQtySum</td>
+                    </tr>
+                }
+                <tr>
+                    <td class="text-left">Total Sum per period:</td>
+                    <td class="text-info">@ResultModel.AdditionalData.LineTotalSumPerPeriod</td>
+                    <td class="text-info">@ResultModel.AdditionalData.OrderQtySumPerPeriod</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table mx-auto">
+            <tr>
+                <td>
+                    <span style="float:left;margin-top:5px" class ="text-info font-weight-bold">Period:</span>
+                    <span style="float:left">
+                        <DateRangeSearch SearchStartDate="@Request.StartDate" SearchEndDate="@Request.EndDate"
+                                         AllowSorting="false" RangeSelected="DateRangeChanged" />
+                    </span>
+                </td>
+                <td>
+                    <span style="float:right">
+                        <ResultPaginator Pages="@ResultModel.PaginationData.PageCount"
+                                         RowsPerPage="@Request.PaginationData.RowsPerPage"
+                                         CurrentPage="@Request.PaginationData.CurrentPage"
+                                         CurrentPageChanged="@OnCurrentPageChanged"
+                                         RowsPerPageChanged="@OnRowsPerPageChanged" />
+                    </span>
+                </td>
+            </tr>
+        </table>
+        
+        
+    }
+</div>
+
+@code 
+{
+    private DateTime _minDateStart = new DateTime(2010, 1, 1);
+    private DateTime _maxDateStart = new DateTime(2020, 1, 1);
+
+    [Parameter]
+    public PaginatedResult<LineTotalAndOrderQtySumPerDayViewModel, LineTotalAndOrderQtySumPerTimePeriodViewModel> ResultModel { get; set; } =
+        new PaginatedResult<LineTotalAndOrderQtySumPerDayViewModel, LineTotalAndOrderQtySumPerTimePeriodViewModel>()
+        {
+            Result = new List<LineTotalAndOrderQtySumPerDayViewModel>(),
+            AdditionalData = new LineTotalAndOrderQtySumPerTimePeriodViewModel() { LineTotalSumPerPeriod = 0, OrderQtySumPerPeriod = 0},
+            PaginationData = new PaginationDataResult() { CurrentPage = 1, PageCount = 1, RowCount = 0, RowsPerPage = 10}
+        };
+
+    [Parameter]
+    public PaycorTest.API.Models.Request.GetAggregatedLineTotalAndOrderQtyInTimePeriodRequest Request { get; set; } =
+        new API.Models.Request.GetAggregatedLineTotalAndOrderQtyInTimePeriodRequest()
+        {
+            StartDate = new DateTime(2010, 1, 1),
+            EndDate = new DateTime(2020, 1, 1),
+            PaginationData = new Common.Result.PaginationData()
+            {
+                CurrentPage = 1,
+                RowsPerPage = 10
+            }
+        };
+
+    private async Task GetData()
+    {
+        var queryString = "?" + Request.ToQueryString();
+
+        var data = await Http.GetAsync("purchaseOrderDetail/getLineTotalAndOrderQtySumPerDay" + queryString);
+        var content = await data.Content.ReadAsStringAsync();
+        var newResultModel = JsonConvert
+        .DeserializeObject<PaginatedResult<LineTotalAndOrderQtySumPerDayViewModel, LineTotalAndOrderQtySumPerTimePeriodViewModel>>(content);
+
+        if (!newResultModel.Result.Any())
+        {
+            ResultModel.Result.Clear();
+            ResultModel.PaginationData.CurrentPage = 1;
+        }
+        else
+        {
+            if (ResultModel == null)
+            {
+                ResultModel = newResultModel;
+            }
+            else
+            {
+                ResultModel.Result.Clear();
+                ResultModel.Result.AddRange(newResultModel.Result);
+                ResultModel.PaginationData.CurrentPage = newResultModel.PaginationData.CurrentPage;
+                ResultModel.PaginationData.RowCount = newResultModel.PaginationData.RowCount;
+                ResultModel.PaginationData.PageCount = newResultModel.PaginationData.PageCount;
+                ResultModel.PaginationData.RowsPerPage = newResultModel.PaginationData.RowsPerPage;
+            }
+
+        }
+
+        Request.PaginationData.CurrentPage = ResultModel.PaginationData.CurrentPage;
+        Request.PaginationData.RowsPerPage = ResultModel.PaginationData.RowsPerPage;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    private async Task OnCurrentPageChanged(int page)
+    {
+        Request.PaginationData.CurrentPage = page;
+        await GetData();
+    }
+
+    private async Task OnRowsPerPageChanged(int rowsPerPage)
+    {
+        Request.PaginationData.RowsPerPage = rowsPerPage;
+        Request.PaginationData.CurrentPage = 1;
+        await GetData();
+    }
+
+    private async Task DateRangeChanged(DateRangeSelection range)
+    {
+        Request.StartDate = range.Start.HasValue ? range.Start.Value : _minDateStart;
+        Request.EndDate = range.End.HasValue ? range.End.Value : _maxDateStart;
+        Request.PaginationData.CurrentPage = 1;
+        await GetData();
+    }
+}

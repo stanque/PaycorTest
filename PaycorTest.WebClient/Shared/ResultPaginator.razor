@@ -1,0 +1,186 @@
+﻿
+    <ul class="pagination">
+        @if (ShowFirst())
+        {
+            <li class="page-item">
+                <button type="button" class="page-link text-secondary"
+                        @onclick="@(() => CurrentPage = 1)">
+                    1<span class="oi oi-arrow-left"></span>
+                </button>
+            </li>
+        }
+        @if (ShowPrev())
+        {
+            <li class="page-item">
+                <button type="button" class="page-link text-secondary"
+                        @onclick="@(() => CurrentPage -= 1)">
+                    <span class="oi oi-arrow-circle-left"></span>
+                </button>
+            </li>
+        }
+        @for (int i = PagesRange.First(); i <= PagesRange.Last(); ++i)
+        {
+            @*IMPORTANT!!!*@
+            var current_i = i;
+            <li class="page-item @(i == CurrentPage ? "active" : "text-secondary")">
+                <button type="button" class="page-link"
+                        @onclick="@(() => CurrentPage = current_i)">
+                    @i
+                </button>
+            </li>
+        }
+        @if (ShowNext())
+        {
+            <li class="page-item"><button type="button" class="page-link text-secondary click-notify" @onclick="@(() => CurrentPage += 1)"><span class="oi oi-arrow-circle-right"></span></button></li>
+        }
+        @if (ShowLast())
+        {
+            <li class="page-item"><button type="button" class="page-link text-secondary click-notify" @onclick="@(() => CurrentPage = Pages)"><span class="oi oi-arrow-right"></span>@Pages</button></li>
+        }
+        <li class="page-item" data-toggle="tooltip" data-placement="bottom" title="Redova po strani">
+            <label class="ml-1 mt-2 click-notify" style="padding-top:2px;">
+                <input type="radio" name="@_radioGroupName" checked="@(RowsPerPage == 10)" @onchange="@(()=> RowsPerPage = 10)" />10
+            </label>
+        </li>
+        <li class="page-item" data-toggle="tooltip" data-placement="bottom" title="Redova po strani">
+            <label class="ml-1 mt-2 click-notify" style="padding-top:2px;">
+                <input type="radio" name="@_radioGroupName" checked="@(RowsPerPage == 20)" @onchange="@(()=> RowsPerPage = 20)" />20
+            </label>
+        </li>
+        <li class="page-item" data-toggle="tooltip" data-placement="bottom" title="Redova po strani">
+            <label class="ml-1 mt-2 click-notify" style="padding-top:2px;">
+                <input type="radio" name="@_radioGroupName" checked="@(RowsPerPage == 30)" @onchange="@(()=> RowsPerPage = 30)" />30
+            </label>
+        </li>
+        <li class="page-item ml-1 mt-1" style="padding-top:4px;">
+            <span class="badge badge-secondary clear-selection click-notify" @onclick="@(()=> RowsPerPage = 10)">x</span>
+        </li>
+    </ul>
+
+@code {
+
+    private string _radioGroupName = Guid.NewGuid().ToString();
+
+    [Parameter]
+    public int Pages { get; set; }
+
+    private int _rowsPerPage = 10;
+    [Parameter]
+    public int RowsPerPage
+    {
+        get { return _rowsPerPage; }
+        set
+        {
+            if(_rowsPerPage != value)
+            {
+                _rowsPerPage = value;
+                if(RowsPerPageChanged.HasDelegate)
+                {
+                    RowsPerPageChanged.InvokeAsync(_rowsPerPage).GetAwaiter().GetResult();
+                }
+            }
+        }
+    }
+
+    private int _currentPage;
+    [Parameter]
+    public int CurrentPage
+    {
+        get { return _currentPage; }
+        set
+        {
+            if(_currentPage != value)
+            {
+                _currentPage = value;
+                if(CurrentPageChanged.HasDelegate)
+                {
+                    CurrentPageChanged.InvokeAsync(_currentPage).GetAwaiter().GetResult();
+                }
+            }
+        }
+    }
+
+
+    private bool ShowFirst()
+    {
+        if((Pages < 4) || CurrentPage == 1)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool ShowLast()
+    {
+        if((CurrentPage + 2 >= Pages) || CurrentPage == Pages)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool ShowPrev()
+    {
+        if(CurrentPage == 1)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool ShowNext()
+    {
+        if(CurrentPage == Pages)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    [Parameter]
+    public EventCallback<int> CurrentPageChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> RowsPerPageChanged { get; set; }
+
+    private IEnumerable<int> PagesRange
+    {
+        get
+        {
+            List<int> pagesToShow = new List<int>();
+
+            if (Pages <= 3)
+            {
+                for (int i = 1; i <= Pages; ++i)
+                {
+                    pagesToShow.Add(i);
+                }
+
+                return pagesToShow;
+            }
+            else
+            {
+                if (CurrentPage >= Pages - 2)
+                {
+                    for (int i = (Pages - 2); i <= Pages; ++i)
+                    {
+                        pagesToShow.Add(i);
+                    }
+
+                    return pagesToShow;
+                }
+
+                for (int i = CurrentPage; i <= CurrentPage + 2; ++i)
+                {
+                    pagesToShow.Add(i);
+                }
+
+                return pagesToShow;
+            }
+        }
+    }
+}

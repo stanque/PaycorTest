@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaycorTest.API", "PaycorTest.API\PaycorTest.API.csproj", "{0A03FBE9-5CA6-494E-BF60-07CAE326ADB8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaycorTest.Application", "PaycorTest.Application\PaycorTest.Application.csproj", "{A5DCAE21-EFA0-448C-9DBB-C81139A8AC77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaycorTest.Service", "PaycorTest.Service\PaycorTest.Service.csproj", "{9F9B71E2-5F92-4B84-A594-C328F3454728}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaycorTest.Data", "PaycorTest.Data\PaycorTest.Data.csproj", "{20A72E78-A54B-4134-8957-D2EAFADB7C3D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaycorTest.Common", "PaycorTest.Common\PaycorTest.Common.csproj", "{549A5176-E31D-4DD0-8CAB-5CDFE29E8EB7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaycorTest.WebClient", "PaycorTest.WebClient\PaycorTest.WebClient.csproj", "{EECB1605-6798-4659-A872-2A176BAFCE5B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaycorTest.Tests", "PaycorTest.Tests\PaycorTest.Tests.csproj", "{400A9E1B-E4BE-45EA-985C-C8C1164EBB0F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A03FBE9-5CA6-494E-BF60-07CAE326ADB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A03FBE9-5CA6-494E-BF60-07CAE326ADB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A03FBE9-5CA6-494E-BF60-07CAE326ADB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A03FBE9-5CA6-494E-BF60-07CAE326ADB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5DCAE21-EFA0-448C-9DBB-C81139A8AC77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5DCAE21-EFA0-448C-9DBB-C81139A8AC77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5DCAE21-EFA0-448C-9DBB-C81139A8AC77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5DCAE21-EFA0-448C-9DBB-C81139A8AC77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F9B71E2-5F92-4B84-A594-C328F3454728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F9B71E2-5F92-4B84-A594-C328F3454728}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F9B71E2-5F92-4B84-A594-C328F3454728}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F9B71E2-5F92-4B84-A594-C328F3454728}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20A72E78-A54B-4134-8957-D2EAFADB7C3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20A72E78-A54B-4134-8957-D2EAFADB7C3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20A72E78-A54B-4134-8957-D2EAFADB7C3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20A72E78-A54B-4134-8957-D2EAFADB7C3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{549A5176-E31D-4DD0-8CAB-5CDFE29E8EB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{549A5176-E31D-4DD0-8CAB-5CDFE29E8EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{549A5176-E31D-4DD0-8CAB-5CDFE29E8EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{549A5176-E31D-4DD0-8CAB-5CDFE29E8EB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EECB1605-6798-4659-A872-2A176BAFCE5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EECB1605-6798-4659-A872-2A176BAFCE5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EECB1605-6798-4659-A872-2A176BAFCE5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EECB1605-6798-4659-A872-2A176BAFCE5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{400A9E1B-E4BE-45EA-985C-C8C1164EBB0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{400A9E1B-E4BE-45EA-985C-C8C1164EBB0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{400A9E1B-E4BE-45EA-985C-C8C1164EBB0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{400A9E1B-E4BE-45EA-985C-C8C1164EBB0F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {898549B0-3A04-48F9-B705-F53A946E9AD1}
+	EndGlobalSection
+EndGlobal

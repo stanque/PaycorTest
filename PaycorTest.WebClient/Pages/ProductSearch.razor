@@ -1,0 +1,233 @@
+@page "/productSearch"
+@using System.Net.Http
+@using PaycorTest.Common.Extensions
+@using PaycorTest.API.Models.Request
+@using PaycorTest.API.Models.AggregationModels
+@using PaycorTest.Api.Models
+
+@inject HttpClient Http
+
+<div class="mx-auto">
+    <p>Search Product by:</p>
+
+    @if (ResultModel == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Product Number</th>
+                    <th>Color</th>
+                    <th>Standard Cost</th>
+                    <th>List Price</th>
+                    <th>Size</th>
+                    <th>Weight</th>
+                    <th>Sell Start Date</th>
+                    <th>Sell End Date</th>
+                    <th>Product Line</th>
+                    <th>Product Description</th>
+                    <th>Discontinued Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in ResultModel.Result)
+                {
+                    <tr>
+                        <td>@result.Name</td>
+                        <td>@result.ProductNumber</td>
+                        <td>@result.Color</td>
+                        <td>@result.StandardCost</td>
+                        <td>@result.ListPrice</td>
+                        <td>@result.Size</td>
+                        <td>@result.Weight</td>
+                        <td>@result.SellStartDate.ToString("dd-MM-yyyy")</td>
+                        <td>@result.SellEndDate?.ToString("dd-MM-yyyy")</td>
+                        <td>@result.ProductLine</td>
+                        <td>@result.ProductDescription</td>
+                        <td>@result.DiscontinuedDate?.ToString("dd-MM-yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        
+        <div class="row">
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-2 text-right text-info font-weight-bold">Name:</div>
+                    <div class="col-10 text-left">
+                        <StringSearch SearchTerm="@Request.ProductName" OnInput="@SearchProductNamePart" AllowSorting="false" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col text-right text-info font-weight-bold">Sell Start:</div>
+                    <div class="col"><DatePicker SearchDate="@Request.SellDateTime" OnDateSelected="@OnDateChanged" /></div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col text-right text-info font-weight-bold">Keywords:</div>
+                    <div class="col" data-toggle="tooltip" data-placement="bottom" title="Comma or space separated Keywords">
+                        <StringSearch SearchTerm="@_searchKeywordsString" OnInput="@KeywordsChanged" AllowSorting="false" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <span style="float:right">
+                    <ResultPaginator Pages="@ResultModel.PaginationData.PageCount"
+                                     RowsPerPage="@Request.PaginationData.RowsPerPage"
+                                     CurrentPage="@Request.PaginationData.CurrentPage"
+                                     CurrentPageChanged="@OnCurrentPageChanged"
+                                     RowsPerPageChanged="@OnRowsPerPageChanged" />
+                </span>
+            </div>
+        </div>
+    }
+</div>
+
+@code 
+{
+
+    [Parameter]
+    public PaginatedResult<ProductViewModel> ResultModel { get; set; } =
+    new PaginatedResult<ProductViewModel>()
+    {
+        Result = new List<ProductViewModel>(),
+        PaginationData = new PaginationDataResult() { CurrentPage = 1, PageCount = 1, RowCount = 0, RowsPerPage = 10 }
+    };
+
+    private PaycorTest.API.Models.Request.GetFilteredProductsRequest _request = new API.Models.Request.GetFilteredProductsRequest()
+    {
+        ProductName = null,
+        SellDateTime = new DateTime(2008, 4, 30),
+        Keywords = new List<string>(),
+        PaginationData = new Common.Result.PaginationData()
+        {
+            CurrentPage = 1,
+            RowsPerPage = 10
+        }
+    };
+
+    [Parameter]
+    public PaycorTest.API.Models.Request.GetFilteredProductsRequest Request
+    {
+        get { return _request; }
+        set
+        {
+            _request = value;
+        }
+    }
+
+    private string _searchKeywordsString = string.Empty;
+
+    private async Task GetData()
+    {
+        var queryString = "?" + Request.ToQueryString();
+
+        var newResultModel = await Http.GetFromJsonAsync<PaginatedResult<ProductViewModel>>("product/getFiltered" + queryString);
+        if (!newResultModel.Result.Any())
+        {
+            ResultModel.Result.Clear();
+            ResultModel.PaginationData.CurrentPage = 1;
+        }
+        else
+        {
+            if (ResultModel == null)
+            {
+                ResultModel = newResultModel;
+            }
+            else
+            {
+                ResultModel.Result.Clear();
+                ResultModel.Result.AddRange(newResultModel.Result);
+                ResultModel.PaginationData.CurrentPage = newResultModel.PaginationData.CurrentPage;
+                ResultModel.PaginationData.RowCount = newResultModel.PaginationData.RowCount;
+                ResultModel.PaginationData.PageCount = newResultModel.PaginationData.PageCount;
+                ResultModel.PaginationData.RowsPerPage = newResultModel.PaginationData.RowsPerPage;
+            }
+
+        }
+
+        _request.PaginationData.CurrentPage = ResultModel.PaginationData.CurrentPage;
+        _request.PaginationData.RowsPerPage = ResultModel.PaginationData.RowsPerPage;
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    private async Task OnCurrentPageChanged(int page)
+    {
+        if(page == 0)
+        {
+            _request.PaginationData.CurrentPage = 1;
+        }
+        if (_request.PaginationData.CurrentPage != page)
+        {
+            _request.PaginationData.CurrentPage = page;
+            await GetData();
+        }
+    }
+
+    private async Task OnRowsPerPageChanged(int rowsPerPage)
+    {
+        if (_request.PaginationData.RowsPerPage != rowsPerPage)
+        {
+            _request.PaginationData.RowsPerPage = rowsPerPage;
+            _request.PaginationData.CurrentPage = 1;
+            await GetData();
+        }
+    }
+
+    private async Task SearchProductNamePart(string term)
+    {
+        _request.ProductName = term;
+        if (string.IsNullOrWhiteSpace(term) || term.Length >= 3)
+        {
+            _request.PaginationData.CurrentPage = 1;
+            await GetData();
+        }
+    }
+
+    private async Task OnDateChanged(DateTime? date)
+    {
+        if (_request.SellDateTime != date)
+        {
+            _request.SellDateTime = date;
+            _request.PaginationData.CurrentPage = 1;
+            await GetData();
+        }
+    }
+
+    private bool _keywordsUpdateLock = false;
+    private async Task KeywordsChanged(string content)
+    {
+        if (!_keywordsUpdateLock)
+        {
+            _keywordsUpdateLock = true;
+
+            _searchKeywordsString = content;
+            if (string.IsNullOrWhiteSpace(_searchKeywordsString) || _searchKeywordsString.Length == 0 || _searchKeywordsString.Length > 2)
+            {
+                List<string> keywords = new List<string>();
+                if (!string.IsNullOrWhiteSpace(_searchKeywordsString))
+                {
+                    keywords = _searchKeywordsString.ToStringList();
+                }
+                _request.Keywords.Clear();
+                _request.Keywords.AddRange(keywords);
+                _request.PaginationData.CurrentPage = 1;
+                await GetData();
+            }
+
+            _keywordsUpdateLock = false;
+        }
+    }
+}

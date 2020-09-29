@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RazorLangVersion>3.0</RazorLangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\PaycorTest.API\Models\AggregationModels\LineTotalAndOrderQtySumPerDayViewModel.cs" Link="Models\AggregationModels\LineTotalAndOrderQtySumPerDayViewModel.cs" />
+    <Compile Include="..\PaycorTest.API\Models\AggregationModels\LineTotalAndOrderQtySumPerTimePeriodViewModel.cs" Link="Models\AggregationModels\LineTotalAndOrderQtySumPerTimePeriodViewModel.cs" />
+    <Compile Include="..\PaycorTest.API\Models\ProductCategoryViewModel.cs" Link="Models\ProductCategoryViewModel.cs" />
+    <Compile Include="..\PaycorTest.API\Models\ProductModelViewModel.cs" Link="Models\ProductModelViewModel.cs" />
+    <Compile Include="..\PaycorTest.API\Models\ProductSubcategoryViewModel.cs" Link="Models\ProductSubcategoryViewModel.cs" />
+    <Compile Include="..\PaycorTest.API\Models\ProductViewModel.cs" Link="Models\ProductViewModel.cs" />
+    <Compile Include="..\PaycorTest.API\Models\PurchaseOrderDetailViewModel.cs" Link="Models\PurchaseOrderDetailViewModel.cs" />
+    <Compile Include="..\PaycorTest.API\Models\PurchaseOrderHeaderViewModel.cs" Link="Models\PurchaseOrderHeaderViewModel.cs" />
+    <Compile Include="..\PaycorTest.API\Models\ShipMethodViewModel.cs" Link="Models\ShipMethodViewModel.cs" />
+    <Compile Include="..\PaycorTest.API\Models\UnitMeasureViewModel.cs" Link="Models\UnitMeasureViewModel.cs" />
+    <Compile Include="..\PaycorTest.API\Models\VendorViewModel.cs" Link="Models\VendorViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Models\AggregationModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PaycorTest.Common\PaycorTest.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\appsettings.development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

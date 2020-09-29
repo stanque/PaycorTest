@@ -1,0 +1,38 @@
+﻿@using PaycorTest.WebClient.Models
+@inject IJSRuntime JSRuntime
+
+<div class="row">
+    <div class="col text-center">
+        <input type="date" class="write-notify" @bind="SearchDate" @bind:event="onchange" @onchange:stopPropagation
+               style="border-radius:0.3rem; border-color:black;padding:2px;min-width:50px;max-width:135px;font-size:small; margin-right:0px;" />
+    </div>
+
+</div>
+
+@code {
+
+    private DateTime? _searchDate;
+
+    [Parameter]
+    public DateTime? SearchDate
+    {
+        get
+        {
+            return _searchDate;
+        }
+        set
+        {
+            if (value != _searchDate)
+            {
+                _searchDate = value;
+
+                if (OnDateSelected.HasDelegate)
+                {
+                    OnDateSelected.InvokeAsync(_searchDate).GetAwaiter().GetResult();
+                }
+            }
+        }
+    }
+
+    [Parameter] public EventCallback<DateTime?> OnDateSelected { get; set; }
+}

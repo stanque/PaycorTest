@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PaycorTest.API</name>
+    </assembly>
+    <members>
+        <member name="M:PaycorTest.API.Controllers.ProductController.Get">
+            <summary>
+            Test endpoint
+            </summary>
+            <returns>OkResult</returns>
+        </member>
+    </members>
+</doc>

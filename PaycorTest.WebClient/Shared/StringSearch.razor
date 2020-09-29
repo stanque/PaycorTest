@@ -1,0 +1,61 @@
+﻿<div class="row">
+    <div class="col text-center">
+        <input type="text" class="write-notify" @bind-value="SearchTerm" @bind-value:event="oninput"
+               placeholder="Search" style="border-radius:0.3rem; border-color:black;padding:2px;min-width:40px;max-width:90px;" />
+        <span class="badge badge-secondary clear-selection" style="cursor:pointer;" @onclick="@(() => SearchTerm = null)">x</span>
+        @if (AllowSorting)
+        {
+            <span class="oi oi-sort-ascending click-notify" style="vertical-align:middle;" @onclick="@(() => Sorting = true)"></span>
+            <span class="oi oi-sort-descending click-notify" style="vertical-align:middle;" @onclick="@(() => Sorting = false)"></span>
+        }
+    </div>
+</div>
+
+@code {
+
+    private string _searchTerm;
+    [Parameter]
+    public string SearchTerm
+    {
+        get { return _searchTerm; }
+        set
+        {
+            if(value != _searchTerm)
+            {
+                _searchTerm = value;
+                if(OnInput.HasDelegate)
+                {
+                    OnInput.InvokeAsync(_searchTerm).GetAwaiter().GetResult();
+                }
+            }
+        }
+    }
+
+    [Parameter]
+    public bool AllowSorting { get; set; }
+
+    private bool? _sorting = null;
+    private bool? Sorting
+    {
+        get { return _sorting; }
+        set
+        {
+            _sorting = value;
+            if(OnSortingChanged.HasDelegate)
+            {
+                OnSortingChanged.InvokeAsync(_sorting).GetAwaiter().GetResult();
+            }
+        }
+    }
+
+    [Parameter]public EventCallback<string> OnInput { get; set; }
+    /// <summary>
+    /// Returns null if no sorting should be done, true - ascending, false -  descending
+    /// </summary>
+    [Parameter]public EventCallback<bool?> OnSortingChanged { get; set; }
+
+    private void Clear()
+    {
+        SearchTerm = null;
+    }
+}

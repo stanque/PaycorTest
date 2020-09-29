@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PaycorTest.API</name>
+    </assembly>
+    <members>
+        <member name="M:PaycorTest.API.Controllers.ProductController.GetProduct(System.Int32,System.Boolean)">
+            <summary>
+            Get Product by Id
+            </summary>
+            <param name="id">Id of the product</param>
+            <param name="addIncludes">Add additional relation data</param>
+            <returns>Product model</returns>
+        </member>
+        <member name="M:PaycorTest.API.Controllers.ProductController.Get(PaycorTest.API.Models.Request.GetFilteredProductsRequest)">
+            <summary>
+            Search for a Product with different search parameters
+            </summary>
+            <param name="request">GetFilteredProductsRequest - ProductName: Part of the Product Name for search, SellDateTime: Selling start date,
+            PaginationData: data for Current Page and number of Rows per Page, Keywords: Words for match in Product Description</param>
+            <returns>Paged and filtered collection of Products</returns>
+        </member>
+        <member name="M:PaycorTest.API.Controllers.PurchaseOrderDetailController.Get(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Get PurchaseOrderDetail by purchaseOrderId and purchaseOrderDetailId
+            </summary>
+            <param name="purchaseOrderId">purchaseOrderId</param>
+            <param name="purchaseOrderDetailId">purchaseOrderDetailId</param>
+            <param name="addIncludes">Add additional relational data</param>
+            <returns>PurchaseOrderDetail model</returns>
+        </member>
+        <member name="M:PaycorTest.API.Controllers.PurchaseOrderDetailController.GetLineTotalAndOrderQtySumPerDay(PaycorTest.API.Models.Request.GetAggregatedLineTotalAndOrderQtyInTimePeriodRequest)">
+            <summary>
+            Obtain sum of Line Total and Order Quantity in specified time period grouped per day
+            </summary>
+            <param name="request">GetAggregatedLineTotalAndOrderQtyInTimePeriodRequest - StartDate: beggining of specified time period, 
+            EndDate: end of specified time period, 
+            PaginationData: defines current page and number of rows per page</param>
+            <returns>Paged aggregation data</returns>
+        </member>
+        <member name="M:PaycorTest.API.Controllers.TestController.Get">
+            <summary>
+            Test endpoint
+            </summary>
+            <returns>Test string (not JSON)</returns>
+        </member>
+        <member name="M:PaycorTest.API.Controllers.TestController.GetException">
+            <summary>
+            Throws a test BadRequest exception
+            </summary>
+            <returns>Exception</returns>
+        </member>
+    </members>
+</doc>
